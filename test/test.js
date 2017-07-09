@@ -1,6 +1,10 @@
 var ObjectToXML = require('../');
 
+<<<<<<< HEAD
 function basicTest(test) {
+=======
+function basicTest (test) {
+>>>>>>> bc82eb4d8cf921008e43332d7e152a5587f55ef1
 	var str = ObjectToXML({
 		a: {
 			b: {
@@ -8,9 +12,18 @@ function basicTest(test) {
 					"#": { d: "asdf" }
 				}
 			}
+<<<<<<< HEAD
 			, e: {
 				"@": {
 					foo: "bar"
+=======
+			, e : {
+				"@" : {
+					foo : "bar"
+				}
+				, "#" : {
+					">>" : "asdf"
+>>>>>>> bc82eb4d8cf921008e43332d7e152a5587f55ef1
 				}
 				, "#": {
 					">>": "asdf",

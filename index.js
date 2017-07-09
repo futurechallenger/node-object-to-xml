@@ -54,14 +54,6 @@ module.exports = function objectToXML(obj, namespace, depth) {
 			if (value && value.constructor.name == 'Date') {
 				xml.push(fixupDate(value));
 			} else if (typeof (value) == 'object') {
-				// const strVal = value['>>'];
-				// if (strVal && typeof strVal === 'string') {
-				// 	xml.push('\n');
-				// 	for (var x = 0; x < depth + 1; x++) {
-				// 		xml.push('  ');
-				// 	}
-				// 	xml.push(`${strVal}\n`)
-				// } else {
 				xml.push('\n');
 				xml.push(objectToXML(value, namespace, depth + 1));
 
