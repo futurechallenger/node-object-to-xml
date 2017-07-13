@@ -3,9 +3,10 @@ var ObjectToXML = require('../');
 function basicTest(test) {
 	var str = ObjectToXML({
 		a: {
+			'%': 'first',
 			b: {
 				c: {
-					"#": { d: "asdf" }
+					"#": { d: "asdf", '%': 'not_c', }
 				}
 			}
 			, e: {
@@ -27,6 +28,7 @@ function basicTest(test) {
 		, g: "<![CDATA[ test & data ]]>"
 		, h: "<!asdf&"
 		, i: {
+			"%": 'item_i',
 			"@": {
 				numeric: 42
 			}

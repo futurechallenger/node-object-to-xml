@@ -7,6 +7,7 @@ module.exports = function objectToXML(obj, namespace, depth) {
 
 	map(obj, function (key, value) {
 		var attributes = '';
+		var tag = '';
 
 		if (value && (value.hasOwnProperty('@') || value.hasOwnProperty('#'))) {
 			attributes = map(value['@'], function (key, value) {
@@ -17,6 +18,8 @@ module.exports = function objectToXML(obj, namespace, depth) {
 					return key + '="' + sanitizer.escape(value) + '"';
 				}
 			}, true).join(' ');
+
+			tag = value['%'];
 
 			value = value['#'];
 		}
@@ -34,7 +37,9 @@ module.exports = function objectToXML(obj, namespace, depth) {
 				xml.push('  ');
 			}
 
-			xml.push('<' + ((namespace) ? namespace + ':' : '') + key + ((attributes) ? ' ' + attributes : ''))
+			xml.push('<' + ((namespace) ? namespace + ':' : '')
+				+ (!tag ? key : tag)
+				+ ((attributes) ? ' ' + attributes : ''))
 
 			//check to see if key is a ?something?
 			if (/^\?.*\?$/.test(key)) {
@@ -47,8 +52,15 @@ module.exports = function objectToXML(obj, namespace, depth) {
 				xml.push('  ');
 			}
 
-			if (key !== '>>') {
-				xml.push('<' + ((namespace) ? namespace + ':' : '') + key + ((attributes) ? ' ' + attributes : '') + '>')
+			tag = value['%'];
+			if (tag) {
+				delete value['%'];
+			}
+
+			if (key.indexOf('>>') === -1) {
+				xml.push('<' + ((namespace) ? namespace + ':' : '')
+					+ (!tag ? key : tag)
+					+ ((attributes) ? ' ' + attributes : '') + '>');
 			}
 
 			if (value && value.constructor.name == 'Date') {
@@ -63,7 +75,7 @@ module.exports = function objectToXML(obj, namespace, depth) {
 				// }
 			} else {
 				if (value && typeof (value) == 'string') {
-					if (key !== '>>') {
+					if (key.indexOf('>>') === -1) {
 						//avoid sanitizing CDATA sections.
 						if (value.substr(0, 9) !== '<![CDATA[' && value.substr(-3) !== ']]>') {
 							value = sanitizer.escape(value);
@@ -77,8 +89,10 @@ module.exports = function objectToXML(obj, namespace, depth) {
 			for (var x = 0; x < depth; x++) {
 				xml.push('  ');
 			}
-			if (key !== '>>') {
-				xml.push('</' + ((namespace) ? namespace + ':' : '') + key.split(/\ /)[0] + '>\n')
+
+			if (key.indexOf('>>') === -1) {
+				xml.push('</' + ((namespace) ? namespace + ':' : '') + (!tag ? key.split(/\ /)[0] : tag) + '>\n');
+				tag = '';
 			}
 		}
 	});
